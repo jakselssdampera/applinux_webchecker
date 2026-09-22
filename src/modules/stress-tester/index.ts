@@ -4,7 +4,7 @@ import type { StressTesterConfig, StressTesterResult } from './types.js';
 
 export class StressTesterModule {
   public async run(config: StressTesterConfig): Promise<StressTesterResult> {
-    const { targetUrl, targetIp, durationMs = 15000, concurrency = 50, method = 'GET' } = config;
+    const { targetUrl, targetIp: _targetIp, durationMs = 15000, concurrency = 50, method = 'GET' } = config;
 
     // Use dispatcher with appropriate localAddress if IP is forced,
     // but undici global dispatcher doesn't easily map hostname to specific IP per request
@@ -58,9 +58,10 @@ export class StressTesterModule {
             const errKey = `HTTP_${statusCode}`;
             errorDistribution[errKey] = (errorDistribution[errKey] || 0) + 1;
           }
-        } catch (err) {
+        } catch (err: unknown) {
           totalErrors++;
-          const errCode = (err as any).code || err.name || 'UNKNOWN_ERROR';
+          const e = err as Record<string, unknown>;
+          const errCode = String(e?.code || e?.name || 'UNKNOWN_ERROR');
           errorDistribution[errCode] = (errorDistribution[errCode] || 0) + 1;
         }
       }
