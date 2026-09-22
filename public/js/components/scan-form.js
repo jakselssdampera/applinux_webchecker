@@ -69,11 +69,11 @@ const ScanForm = {
                   <div class="module-option-desc">Coming in Phase 3</div>
                 </div>
               </label>
-              <label class="module-option disabled">
-                <input type="checkbox" value="stress-tester" disabled>
+              <label class="module-option">
+                <input type="checkbox" value="stress-tester">
                 <div>
                   <div class="module-option-label">📊 Stress Test</div>
-                  <div class="module-option-desc">Coming in Phase 4</div>
+                  <div class="module-option-desc">Load test with HTTP flooding</div>
                 </div>
               </label>
             </div>
@@ -247,6 +247,10 @@ const ScanForm = {
     } else if (module === 'vuln-scanner' && data.vulnerabilities) {
       if (window.VulnResult) {
         window.VulnResult.render(area, data);
+      }
+    } else if (module === 'stress-tester' && data.totalRequests !== undefined) {
+      if (window.StressResult) {
+        window.StressResult.render(area, data);
       }
     }
   },

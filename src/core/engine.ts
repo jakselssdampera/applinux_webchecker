@@ -2,6 +2,7 @@ import { EventEmitter } from 'node:events';
 import { nanoid } from 'nanoid';
 import { ProfilerModule } from '../modules/profiler/index.js';
 import { VulnScannerModule } from '../modules/vuln-scanner/index.js';
+import { StressTesterModule } from '../modules/stress-tester/index.js';
 import { auditLogger } from './audit-logger.js';
 import { encrypt } from '../utils/crypto.js';
 import { config } from '../config.js';
@@ -34,6 +35,7 @@ export interface ScanEvent {
 export class ScanEngine extends EventEmitter {
   private profiler = new ProfilerModule();
   private vulnScanner = new VulnScannerModule();
+  private stressTester = new StressTesterModule();
 
   /**
    * Start a scan against the target URL.
@@ -105,8 +107,14 @@ export class ScanEngine extends EventEmitter {
             result = await this.vulnScanner.run(targetUrl, targetIp);
             break;
 
-          case MODULE_NAMES.EXPLOIT_SIM:
           case MODULE_NAMES.STRESS_TESTER:
+            result = await this.stressTester.run({
+              targetUrl,
+              targetIp,
+            });
+            break;
+
+          case MODULE_NAMES.EXPLOIT_SIM:
             // Placeholder for future modules
             result = { message: `Module ${moduleName} not yet implemented` };
             break;

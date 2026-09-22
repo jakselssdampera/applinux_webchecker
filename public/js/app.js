@@ -222,6 +222,8 @@ const App = {
             ProfileResult.render(resultsContainer, result.data);
           } else if (result.module === 'vuln-scanner' && result.data && window.VulnResult) {
             window.VulnResult.render(resultsContainer, result.data);
+          } else if (result.module === 'stress-tester' && result.data && window.StressResult) {
+            window.StressResult.render(resultsContainer, result.data);
           }
         }
       } else {
