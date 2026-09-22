@@ -5,6 +5,7 @@ import { validateTargetUrl } from '../../utils/url-validator.js';
 import { decrypt } from '../../utils/crypto.js';
 import { config } from '../../config.js';
 import { MODULE_NAMES, type ModuleName } from '../../utils/constants.js';
+import { generateHtmlReport } from '../../core/report-generator.js';
 
 interface ScanBody {
   url: string;
@@ -144,5 +145,48 @@ export async function scanRoutes(fastify: FastifyInstance): Promise<void> {
    */
   fastify.get('/api/stats', async () => {
     return getDashboardStats();
+  });
+
+  /**
+   * GET /api/scan/:id/report — Generate HTML/PDF report
+   */
+  fastify.get('/api/scan/:id/report', async (request: FastifyRequest, reply: FastifyReply) => {
+    const { id } = request.params as ScanParams;
+
+    const scan = getScan(id);
+    if (!scan) {
+      return reply.status(404).type('text/html').send('<h1>404 — Scan Not Found</h1>');
+    }
+
+    const rawResults = getScanResults(id);
+    const results = rawResults.map((r) => {
+      let data: unknown;
+      try {
+        const decrypted = config.encryptionKey
+          ? decrypt(r.data, config.encryptionKey)
+          : r.data;
+        data = JSON.parse(decrypted);
+      } catch {
+        data = { error: 'Failed to decrypt result' };
+      }
+
+      return {
+        module: r.module,
+        data,
+      };
+    });
+
+    const html = generateHtmlReport({
+      id: scan.id,
+      targetUrl: scan.target_url,
+      targetIp: scan.target_ip,
+      status: scan.status,
+      modules: JSON.parse(scan.modules),
+      createdAt: scan.created_at,
+      completedAt: scan.completed_at,
+      results,
+    });
+
+    return reply.type('text/html').send(html);
   });
 }

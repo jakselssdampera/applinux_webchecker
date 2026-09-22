@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { ProfilerModule } from '../modules/profiler/index.js';
 import { VulnScannerModule } from '../modules/vuln-scanner/index.js';
 import { StressTesterModule } from '../modules/stress-tester/index.js';
+import { ExploitSimulatorModule } from '../modules/exploit-sim/index.js';
 import { auditLogger } from './audit-logger.js';
 import { encrypt } from '../utils/crypto.js';
 import { config } from '../config.js';
@@ -36,6 +37,7 @@ export class ScanEngine extends EventEmitter {
   private profiler = new ProfilerModule();
   private vulnScanner = new VulnScannerModule();
   private stressTester = new StressTesterModule();
+  private exploitSim = new ExploitSimulatorModule();
 
   /**
    * Start a scan against the target URL.
@@ -115,8 +117,7 @@ export class ScanEngine extends EventEmitter {
             break;
 
           case MODULE_NAMES.EXPLOIT_SIM:
-            // Placeholder for future modules
-            result = { message: `Module ${moduleName} not yet implemented` };
+            result = await this.exploitSim.run(targetUrl, targetIp);
             break;
 
           default:

@@ -62,11 +62,11 @@ const ScanForm = {
                   <div class="module-option-desc">Scan for common vulnerabilities</div>
                 </div>
               </label>
-              <label class="module-option disabled">
-                <input type="checkbox" value="exploit-sim" disabled>
+              <label class="module-option">
+                <input type="checkbox" value="exploit-sim">
                 <div>
                   <div class="module-option-label">⚡ Exploit Sim</div>
-                  <div class="module-option-desc">Coming in Phase 3</div>
+                  <div class="module-option-desc">Safe PoC & vulnerability validation</div>
                 </div>
               </label>
               <label class="module-option">

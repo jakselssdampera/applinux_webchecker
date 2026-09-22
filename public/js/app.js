@@ -49,6 +49,9 @@ const App = {
       case 'results':
         this.renderScanResults(mainContent, params[0]);
         break;
+      case 'repeater':
+        if (window.RepeaterLab) window.RepeaterLab.render(mainContent);
+        break;
       default:
         this.renderDashboard(mainContent);
     }
@@ -196,15 +199,22 @@ const App = {
     }
 
     container.innerHTML = `
-      <div class="page-header">
-        <h1>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-          Scan Results
-        </h1>
-        <p class="text-mono" style="font-size:0.85rem;">ID: ${scanId}</p>
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <div>
+          <h1>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Scan Results
+          </h1>
+          <p class="text-mono" style="font-size:0.85rem;">ID: ${scanId}</p>
+        </div>
+        <div>
+          <a href="/api/scan/${scanId}/report" target="_blank" class="btn btn-secondary" style="font-size:0.85rem;">
+            📄 Export HTML/PDF Report
+          </a>
+        </div>
       </div>
       <div id="scan-detail-results">
         <div class="empty-state"><div class="spinner spinner-lg"></div><p class="mt-md">Loading results...</p></div>
@@ -222,6 +232,8 @@ const App = {
             ProfileResult.render(resultsContainer, result.data);
           } else if (result.module === 'vuln-scanner' && result.data && window.VulnResult) {
             window.VulnResult.render(resultsContainer, result.data);
+          } else if (result.module === 'exploit-sim' && result.data && window.ExploitResult) {
+            window.ExploitResult.render(resultsContainer, result.data);
           } else if (result.module === 'stress-tester' && result.data && window.StressResult) {
             window.StressResult.render(resultsContainer, result.data);
           }

@@ -59,28 +59,26 @@ const Sidebar = {
           Tech Profiler
         </a>
 
-        <a class="sidebar-link disabled" title="Coming in Phase 2">
+        <a class="sidebar-link" href="#scan" data-page="scan">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
           </svg>
           Vuln Scanner
-          <span class="badge badge-neutral" style="margin-left:auto;font-size:0.6rem;">SOON</span>
         </a>
 
-        <a class="sidebar-link disabled" title="Coming in Phase 3">
+        <a class="sidebar-link" href="#repeater" data-page="repeater">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
           </svg>
-          Exploit Sim
-          <span class="badge badge-neutral" style="margin-left:auto;font-size:0.6rem;">SOON</span>
+          Exploit Repeater
+          <span class="badge badge-success" style="margin-left:auto;font-size:0.6rem;">LAB</span>
         </a>
 
-        <a class="sidebar-link disabled" title="Coming in Phase 4">
+        <a class="sidebar-link" href="#scan" data-page="scan">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
           </svg>
           Stress Test
-          <span class="badge badge-neutral" style="margin-left:auto;font-size:0.6rem;">SOON</span>
         </a>
       </nav>
 

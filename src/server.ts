@@ -11,6 +11,7 @@ import { errorHandlerPlugin } from './api/middleware/error-handler.js';
 import { authConsentPlugin } from './api/middleware/auth-consent.js';
 import { healthRoutes } from './api/routes/health.routes.js';
 import { scanRoutes } from './api/routes/scan.routes.js';
+import { exploitRoutes } from './api/routes/exploit.routes.js';
 import { websocketRoutes } from './api/websocket.js';
 import { APP_NAME, APP_VERSION } from './utils/constants.js';
 
@@ -53,6 +54,7 @@ async function main(): Promise<void> {
   // ─── Register Routes ──────────────────────────
   await fastify.register(healthRoutes);
   await fastify.register(scanRoutes);
+  await fastify.register(exploitRoutes);
   await fastify.register(websocketRoutes);
 
   // ─── Graceful Shutdown ─────────────────────────
