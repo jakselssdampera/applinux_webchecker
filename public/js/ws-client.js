@@ -103,6 +103,24 @@ class WsClient {
       try { cb(data); } catch (e) { console.error(`[WS] Listener error:`, e); }
     }
   }
+
+  /**
+   * Send a scan subscription message to the server.
+   */
+  subscribe(scanId) {
+    if (this.ws && this.connected) {
+      this.ws.send(JSON.stringify({ type: 'subscribe', scanId }));
+    }
+  }
+
+  /**
+   * Clear scan subscription and listen globally.
+   */
+  unsubscribe() {
+    if (this.ws && this.connected) {
+      this.ws.send(JSON.stringify({ type: 'unsubscribe' }));
+    }
+  }
 }
 
 window.wsClient = new WsClient();

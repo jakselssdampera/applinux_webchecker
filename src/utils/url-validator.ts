@@ -37,9 +37,13 @@ export async function validateTargetUrl(
   input: string,
   allowPrivate = false
 ): Promise<UrlValidationResult> {
-  // Normalize: add protocol if missing
+  // Normalize: add protocol if missing, but reject other protocols
   let rawUrl = input.trim();
-  if (!/^https?:\/\//i.test(rawUrl)) {
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//i.test(rawUrl)) {
+    if (!/^https?:\/\//i.test(rawUrl)) {
+      return { valid: false, error: 'Only http and https protocols are allowed' };
+    }
+  } else {
     rawUrl = `https://${rawUrl}`;
   }
 
