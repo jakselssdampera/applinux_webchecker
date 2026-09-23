@@ -31,8 +31,12 @@ async function main(): Promise<void> {
   fastify.log.info('Database initialized');
 
   // ─── Register Plugins ──────────────────────────
+  const cookieSecret = config.cookieSecret && config.cookieSecret.length >= 16
+    ? config.cookieSecret
+    : 'websec-auditor-secure-fallback-cookie-secret-32b';
+
   await fastify.register(fastifyCookie, {
-    secret: config.cookieSecret, // for signed cookies
+    secret: cookieSecret, // for signed cookies
   });
 
   await fastify.register(fastifyRateLimit, {

@@ -15,7 +15,7 @@ function loadEnvFile(): void {
     if (eqIndex === -1) continue;
     const key = trimmed.slice(0, eqIndex).trim();
     const value = trimmed.slice(eqIndex + 1).trim();
-    if (!process.env[key]) {
+    if (value && !process.env[key]) {
       process.env[key] = value;
     }
   }
@@ -23,14 +23,19 @@ function loadEnvFile(): void {
 
 loadEnvFile();
 
+const rawCookieSecret = process.env['COOKIE_SECRET']?.trim();
+const rawEncryptionKey = process.env['ENCRYPTION_KEY']?.trim();
+
 export const config = {
   port: parseInt(process.env['PORT'] ?? '3000', 10),
   host: process.env['HOST'] ?? '0.0.0.0',
 
   dbPath: process.env['DB_PATH'] ?? './data/websec.db',
 
-  encryptionKey: process.env['ENCRYPTION_KEY'] ?? '',
-  cookieSecret: process.env['COOKIE_SECRET'] ?? randomBytes(32).toString('hex'),
+  encryptionKey: rawEncryptionKey || '',
+  cookieSecret: rawCookieSecret && rawCookieSecret.length >= 16
+    ? rawCookieSecret
+    : randomBytes(32).toString('hex'),
 
   logLevel: (process.env['LOG_LEVEL'] ?? 'info') as 'debug' | 'info' | 'warn' | 'error',
   auditLogDir: process.env['AUDIT_LOG_DIR'] ?? './data/audit-logs',

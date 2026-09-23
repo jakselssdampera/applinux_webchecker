@@ -1,4 +1,5 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import fp from 'fastify-plugin';
 import { auditLogger } from '../../core/audit-logger.js';
 
 const CONSENT_COOKIE = 'websec_consent';
@@ -12,7 +13,7 @@ const CONSENT_COOKIE = 'websec_consent';
  * - POST /api/consent — accept disclaimer
  * - All /api/scan* routes are blocked without consent
  */
-export async function authConsentPlugin(fastify: FastifyInstance): Promise<void> {
+async function authConsentPluginFn(fastify: FastifyInstance): Promise<void> {
 
   // ─── Consent endpoint ───────────────────────────
   fastify.post('/api/consent', async (request: FastifyRequest, reply: FastifyReply) => {
@@ -71,3 +72,5 @@ export async function authConsentPlugin(fastify: FastifyInstance): Promise<void>
     }
   });
 }
+
+export const authConsentPlugin = fp(authConsentPluginFn);

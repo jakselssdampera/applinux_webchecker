@@ -1,10 +1,11 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import fp from 'fastify-plugin';
 
 /**
  * Global error handler plugin for Fastify.
  * Returns structured JSON error responses.
  */
-export async function errorHandlerPlugin(fastify: FastifyInstance): Promise<void> {
+async function errorHandlerPluginFn(fastify: FastifyInstance): Promise<void> {
   fastify.setErrorHandler(
     (error: Error & { statusCode?: number; validation?: unknown }, _request: FastifyRequest, reply: FastifyReply) => {
       const statusCode = error.statusCode ?? 500;
@@ -40,3 +41,5 @@ export async function errorHandlerPlugin(fastify: FastifyInstance): Promise<void
     });
   });
 }
+
+export const errorHandlerPlugin = fp(errorHandlerPluginFn);
