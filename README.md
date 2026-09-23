@@ -1,6 +1,8 @@
 # 🛡️ WebSec Auditor & Stress Tester
 
 > All-in-one security auditing, vulnerability scanning, exploitation simulation, and load resilience platform for modern web applications.
+>
+> 📖 **[Baca Panduan Lengkap Penggunaan (Bahasa Indonesia)](file:///d:/Linux/App%20Linux/PANDUAN_PENGGUNAAN.md)**
 
 ---
 
