@@ -57,8 +57,4 @@ export interface ProfileResult {
   scannedAt: string;
 }
 
-/** Module interface (shared across all future modules). */
-export interface IModule {
-  name: string;
-  run(targetUrl: string, targetIp: string | null): Promise<unknown>;
-}
+export { type IModule } from '../../types/module.js';

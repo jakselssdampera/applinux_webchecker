@@ -154,6 +154,11 @@ const ScanForm = {
       const result = await ApiClient.startScan(url, modules);
       this.currentScanId = result.scanId;
 
+      // Subscribe to this specific scan on WebSocket
+      if (window.wsClient && typeof window.wsClient.subscribe === 'function') {
+        window.wsClient.subscribe(result.scanId);
+      }
+
       // Show progress area
       document.getElementById('scan-progress-area').classList.remove('hidden');
       document.getElementById('scan-results-area').classList.add('hidden');
@@ -248,6 +253,10 @@ const ScanForm = {
       if (window.VulnResult) {
         window.VulnResult.render(area, data);
       }
+    } else if (module === 'exploit-sim') {
+      if (window.ExploitResult) {
+        window.ExploitResult.render(area, data);
+      }
     } else if (module === 'stress-tester' && data.totalRequests !== undefined) {
       if (window.StressResult) {
         window.StressResult.render(area, data);
@@ -256,6 +265,9 @@ const ScanForm = {
   },
 
   resetForm() {
+    if (window.wsClient && typeof window.wsClient.unsubscribe === 'function') {
+      window.wsClient.unsubscribe();
+    }
     const submitBtn = document.getElementById('scan-submit-btn');
     if (submitBtn) {
       submitBtn.disabled = false;
