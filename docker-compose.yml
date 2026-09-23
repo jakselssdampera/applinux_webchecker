@@ -1,0 +1,31 @@
+services:
+  websec-auditor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: websec-auditor
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - DB_PATH=/app/data/websec.db
+      - AUDIT_LOG_DIR=/app/data/audit-logs
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-}
+      - COOKIE_SECRET=${COOKIE_SECRET:-}
+    volumes:
+      # Persistent storage for SQLite database and compliance audit logs
+      - ./data:/app/data
+    deploy:
+      resources:
+        limits:
+          memory: 1536M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

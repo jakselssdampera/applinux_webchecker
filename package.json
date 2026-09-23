@@ -9,7 +9,8 @@
     "start": "tsx src/server.ts",
     "build": "esbuild src/server.ts --bundle --platform=node --format=esm --outdir=dist --packages=external",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "start:prod": "node dist/server.js"
   },
   "keywords": [
     "security",

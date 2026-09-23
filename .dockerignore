@@ -1,0 +1,16 @@
+node_modules
+data
+.env
+.git
+.gitignore
+.vscode
+*.log
+*.db
+*.db-journal
+*.db-wal
+dist
+test
+deploy
+README.md
+AGENTS.md
+prd.md

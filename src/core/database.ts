@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { config } from '../config.js';
+import { SCHEMA_SQL } from '../database/schema.js';
 
 let db: SqlJsDatabase | null = null;
 let dbPath: string = '';
@@ -33,9 +34,7 @@ export async function initDatabase(): Promise<SqlJsDatabase> {
   db.run('PRAGMA foreign_keys = ON');
 
   // Run schema
-  const schemaPath = resolve(import.meta.dirname, '../database/schema.sql');
-  const schema = readFileSync(schemaPath, 'utf-8');
-  db.run(schema);
+  db.run(SCHEMA_SQL);
 
   // Save to disk
   saveDatabase();
