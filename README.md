@@ -1,77 +1,168 @@
-# WebSec Auditor & Stress Tester
+# 🛡️ WebSec Auditor & Stress Tester
 
-> All-in-one security auditing, vulnerability scanning, exploitation simulation, and stress testing platform for modern web applications.
-
----
-
-## ⚠️ Legal Disclaimer
-
-**This tool is designed for authorized security testing only.** You MUST have explicit written permission from the owner of any system you test. Unauthorized access to computer systems is illegal in most jurisdictions.
-
-The developers assume no liability and are not responsible for any misuse or damage caused by this tool.
+> All-in-one security auditing, vulnerability scanning, exploitation simulation, and load resilience platform for modern web applications.
 
 ---
 
-## Requirements
+## ⚠️ Legal & Ethical Disclaimer
 
-- Node.js 20+
-- npm
+**This tool is designed strictly for authorized security auditing, penetration testing, and educational purposes.** You **MUST** obtain explicit, documented permission from the owner of any website or IP before initiating scans, exploit simulations, or stress testing.
+
+Unauthorized scanning or denial-of-service testing against unauthorized targets is illegal under computer misuse legislation worldwide. The authors assume no liability for misuse, downtime, or damages resulting from the use of this tool.
 
 ---
 
-## Quick Start
+## 🚀 Key Features & Modules
+
+| Module | Status | Highlights |
+|---|---|---|
+| **🔍 Tech Profiler** | ✅ Active | 30+ technology signatures (Nginx, Apache, PHP, Laravel, WordPress, React, Django), 12+ WAF detections (Cloudflare, AWS WAF, Akamai), OS banner analysis, security headers grade. |
+| **🛡️ Vulnerability Scanner** | ✅ Active | Bounded concurrent crawler (4x concurrency), SQL Injection detection, Reflected XSS discovery, server misconfigurations (directory indexing, exposed `.env`, SSL/TLS weaknesses). |
+| **⚡ Exploit Simulator** | ✅ Active | Curated library of 14 non-destructive PoC payloads, automated arithmetic & canary verification, reproduction cURL command generator with remediation roadmap. |
+| **🧪 Request Repeater Lab** | ✅ Active | Burp Suite-inspired interactive request mutator (`#repeater`), quick payload insertion into URL/Body, live status, latency & headers inspection with SSRF guardrails. |
+| **📊 Stress & Load Tester** | ✅ Active | Asynchronous HTTP flood engine built on `undici`, configurable Virtual Users (concurrency) & duration, real-time requests/second, latency breakdown, and error distribution. |
+| **📄 Executive Reporting** | ✅ Active | Print/PDF-ready HTML report generation (`GET /api/scan/:id/report`) with Executive Summary, Security Score & Grade (A-F), and Prioritized Remediation Checklist. |
+| **⚖️ Compliance & Security** | ✅ Active | Signed authorization consent cookies, AES-256-GCM encryption with per-operation random salt, SSRF loopback protections, and dual JSONL + SQLite audit logging. |
+
+---
+
+## 🏗️ Architecture
+
+```
+                    +--------------------------------+
+                    |    Vanilla JS Dashboard SPA    |
+                    | (Hash-based router / Glass UI) |
+                    +---------------+----------------+
+                                    |
+                                    | REST / WebSocket
+                                    v
+                    +--------------------------------+
+                    |       Fastify 5 Server         |
+                    |  (Cookie Auth / Rate Limiting) |
+                    +---------------+----------------+
+                                    |
+       +----------------------------+----------------------------+
+       |                            |                            |
+       v                            v                            v
++--------------+            +---------------+            +---------------+
+|  ScanEngine  |            | Exploit Lab & |            | Report Engine |
+| Orchestrator |            |   Repeater    |            |  (Print / PDF)|
++-------+------+            +-------+-------+            +---------------+
+        |                           |
+   +----+------------------+        | (SSRF Guardrail)
+   |                       |        v
+   v                       v  +-------------+
++-----------+        +-------------+  |   Target    |
+| Profiler  |        | VulnScanner |  | Application |
+|  Module   |        |  (Crawler)  |  +-------------+
++-----------+        +-------------+
+   |                       |
+   v                       v
++-----------+        +-------------+
+|  Exploit  |        | StressTest  |
+| Simulator |        |  (undici)   |
++-----------+        +-------------+
+```
+
+---
+
+## 📋 Requirements
+
+- **Runtime**: Node.js 20.x or higher
+- **Package Manager**: npm 10.x or higher
+- **Operating System**: Linux, macOS, or Windows
+
+---
+
+## ⚡ Quick Start
 
 ```bash
-# 1. Install dependencies
+# 1. Clone repository
+git clone https://github.com/jakselssdampera/applinux_webchecker.git
+cd applinux_webchecker
+
+# 2. Install dependencies
 npm install
 
-# 2. Copy environment config
+# 3. Environment setup
 cp .env.example .env
 
-# 3. Generate random secrets (optional, fallbacks exist)
+# 4. Generate random encryption key & cookie secret (optional, fallbacks exist)
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 # Paste output into .env as ENCRYPTION_KEY and COOKIE_SECRET
 
-# 4. Start development server
+# 5. Start development server
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Visit **`http://localhost:3000`** in your browser.
 
 ---
 
-## Modules & Capabilities
+## 🔌 API Reference
 
-| Module | Status | Features |
+### Scan Management
+
+| Method | Endpoint | Description |
 |---|---|---|
-| **Technology Profiling** | ✅ Active | 30+ Tech signatures (Nginx, Apache, PHP, Laravel, React, WordPress), 12+ WAF detection, OS fingerprinting, security headers audit |
-| **Vulnerability Scanner** | ✅ Active | Concurrent bounded crawler (4x concurrency), SQLi detection, Reflected XSS discovery, server misconfiguration detection |
-| **Exploitation Simulator** | ✅ Active | Curated safe PoC payload library (SQLi, XSS, LFI, Command Injection, SSRF), automated non-destructive PoC verification, cURL reproduction generator |
-| **Request Repeater Lab** | ✅ Active | Burp Suite-like interactive request mutator & repeater (`#repeater`), quick payload inserter, live status, latency & header inspector with SSRF protection |
-| **Stress & Load Tester** | ✅ Active | High-throughput asynchronous HTTP flood engine (`undici`), configurable concurrency & duration, live RPS, latency breakdown & error distribution |
-| **Executive Reporting** | ✅ Active | Print/PDF-ready HTML report generation (`GET /api/scan/:id/report`) with Executive Summary, Security Score & Grade (A-F), and Prioritized Remediation Roadmap |
-| **Automated Test Suite** | ✅ Active | 17 Vitest unit tests covering crypto, SSRF validation, report generation, and payload integrity |
+| `POST` | `/api/scan` | Initiate a scan (`{ url: string, modules?: string[] }`) |
+| `GET` | `/api/scan/:id` | Retrieve scan status, metadata, and decrypted findings |
+| `GET` | `/api/scan/:id/report` | Render full executive HTML/PDF security audit report |
+| `GET` | `/api/scans` | List scan history with pagination (`?limit=50&offset=0`) |
+| `GET` | `/api/stats` | Dashboard statistics (Total, Completed, Running, Failed) |
+
+### Exploitation & Repeater Lab
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/exploit/payloads` | Catalog of categorized safe proof-of-concept payloads |
+| `POST` | `/api/exploit/repeat` | Manual request repeater (`{ url, method, headers, body }`) with SSRF protection |
+
+### System & Realtime
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/health` | Service health status, uptime, and version info |
+| `WS` | `/ws` | Real-time scan updates with `{ type: 'subscribe', scanId }` filtering |
 
 ---
 
-## Development & Testing Commands
+## 🧪 Testing & Quality Assurance
 
-```bash
-# Typecheck
-npm run typecheck
+The project includes an automated test suite powered by **Vitest**:
 
-# Run test suite
+```powershell
+# Run full unit & integration test suite
 npm test
 
-# Build production bundle
+# Run strict TypeScript typecheck
+npm run typecheck
+
+# Build production bundle with esbuild
 npm run build
 
 # Start production server
 npm start
 ```
 
+### Test Coverage Highlights
+- **Crypto Security**: AES-256-GCM encryption/decryption, per-operation random salt & IV uniqueness, tamper detection.
+- **SSRF Guardrails**: Rejection of loopback (`127.0.0.1`, `::1`), private subnets (`10.x`, `192.168.x`, `172.16.x`), and non-HTTP protocols.
+- **Reporting Engine**: Grade threshold calculations (A to F), HTML sanitization against XSS in target URLs.
+- **Payload Integrity**: Validation of default safe flags and canary tokens across all 14 PoC payloads.
+
 ---
 
-## License
+## 🔒 Security Architecture
 
-MIT
+1. **SSRF Guardrail (`src/utils/url-validator.ts`)**: Resolves hostnames via DNS and blocks requests targeting RFC 1918 private subnets, loopback, or cloud metadata endpoints.
+2. **Safe Exploit Mode**: Automated vulnerability verification utilizes arithmetic comparisons (`1=1` vs `1=2`), benign time-delay checks, and console canary reflections without modifying database records.
+3. **Encryption at Rest**: Stored scan findings are encrypted using AES-256-GCM with keys derived via Scrypt.
+4. **Rate Limiting**: Enforced via `@fastify/rate-limit` (100 req/min default per client).
+5. **Signed Consent Cookie**: Fastify cookie verification ensures the legal consent modal has been acknowledged before any scanning endpoint can be triggered.
+
+---
+
+## 📄 License
+
+Distributed under the [MIT License](LICENSE).
